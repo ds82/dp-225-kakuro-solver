@@ -32,46 +32,34 @@ try {
 
 var constraints = data.map(Constraint.create);
 
+// generate intital solution
 var solution = $ld.range(0, rows);
 solution = solution.map(() => $ld.range(1, cols + 1, 0));
 
 function checkSolution(solution) {
-  var oneInvalid = constraints.find((constraint) => !constraint.checkSolution(solution));
-  return !oneInvalid;
+  var failedConstraint;
+  var oneInvalid = constraints.find((constraint) => {
+    var valid = constraint.checkSolution(solution);
+    if (!valid) {
+      failedConstraint = constraint;
+    }
+    return !valid;
+  });
+  return [!oneInvalid, failedConstraint];
 }
 
-function nextSolution(solution, index = (solution.length - 1)) {
-  var entries = solution[index]; // e.g. [1,2,3,4,5]
-  var min = Math.min(...entries);
-
-  if (min === 9 && index === 0) { return false; } // no more solutions
-  else if (min === 9) {
-    solution[index] = $ld.range(1, cols + 1, 0);
-    return nextSolution(solution, index - 1);
-  }
-
-  // hacky to increase the number ;)
-  solution[index] = nextNumber(solution[index]);
-  return solution;
+function nextSolution(solution, failedConstraint = constraints[0]) {
+  return failedConstraint.nextSolution(solution);
 }
 
-function hasZero(number) {
-  return Math.min(...number) === 0;
-}
-
-function nextNumber(number) {
-  number = (String(parseInt(number.join(''))+1)).split('').map(v => parseInt(v));
-  return hasZero(number) ? nextNumber(number) : number;
-}
-
-var check;
+var check, failedConstraint;
 while (solution !== false) {
-  check = checkSolution(solution);
+  [check, failedConstraint] = checkSolution(solution);
   if (check) {
     console.log('FOUND SOLUTION');
     console.log(solution);
   }
-  solution = nextSolution(solution);
+  solution = nextSolution(solution, failedConstraint);
 }
 
 console.log('DONE');
