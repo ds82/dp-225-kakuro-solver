@@ -1,0 +1,16 @@
+{
+  "name": "dp-225-kakuro-solver",
+  "version": "1.0.0",
+  "description": "Solves Kakuro puzzles using brute force & es6",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dennis Sänger <npm15@mail.ds82.de>",
+  "license": "ISC"
+}
